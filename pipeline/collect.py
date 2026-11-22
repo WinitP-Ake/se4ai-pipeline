@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
+REQUIRED_COLUMNS = {"sqft", "bedrooms", "year_built", "region", "sold_date", "price"}
 
 def load_sales(paths: list[Path]) -> pd.DataFrame:
     """Read every CSV in `paths` and return one DataFrame with all rows.
@@ -14,7 +15,17 @@ def load_sales(paths: list[Path]) -> pd.DataFrame:
     # TODO (Task 1): move the "1. collect" block from train_all.py here.
     # Read EVERY file in `paths` -- not the fixed name "data/sales_2025.csv".
     # Hint: pd.concat([pd.read_csv(p) for p in paths], ignore_index=True)
-    dfs = [pd.read_csv(p) for p in paths]
-    df = pd.concat(dfs, ignore_index=True)
-    print("loaded", len(df), "sales")
-    return df
+    # dfs = [pd.read_csv(p) for p in paths]
+    # df = pd.concat(dfs, ignore_index=True)
+    # print("loaded", len(df), "sales")
+    # return df
+    frames = []
+    for p in paths:
+        df = pd.read_csv(p)
+        missing = REQUIRED_COLUMNS - set(df.columns)
+        if missing:
+            raise ValueError(
+                f"{p} is missing required column(s): {sorted(missing)}"
+            )
+        frames.append(df)
+    return pd.concat(frames, ignore_index=True)

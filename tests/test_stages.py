@@ -3,6 +3,7 @@
 They check that each stage uses its inputs (parameters) instead of values
 copied from train_all.py, such as a fixed file name or a fixed tree depth.
 """
+import pytest
 import pandas as pd
 
 from pipeline.collect import load_sales
@@ -49,3 +50,14 @@ def test_train_model_trains_on_all_rows_it_is_given():
         f"trained on {model.tree_.n_node_samples[0]} of {len(X)} rows: "
         "the train/test split already happens in run_pipeline.py, so don't split again"
     )
+
+
+def test_load_sales_raises_on_missing_column(tmp_path):
+    bad_file = tmp_path / "missing_price.csv"
+    bad_file.write_text(
+        "sqft,bedrooms,year_built,region,sold_date\n"
+        "1500,3,1990,Suburbs,2025-05-01\n"
+    )
+
+    with pytest.raises(ValueError, match="price"):
+        load_sales([bad_file])
