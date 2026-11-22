@@ -21,7 +21,7 @@ DATA_FILES = [
     # Task 2: add Path("data/sales_2026_q1.csv") here
     Path("data/sales_2026_q1.csv")
 ]
-MAX_DEPTH = 8          # Task 3: try 1 to see the evaluation gate fail
+MAX_DEPTH = 1          # Task 3: try 1 to see the evaluation gate fail
 MAX_MAE = 50_000       # evaluation gate: maximum acceptable error in dollars
 OUT = Path("out")
 
